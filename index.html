@@ -23,6 +23,132 @@
     <!-- Lenis for Premium Smooth Scrolling -->
     <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 
+    <!-- =============================================
+         TOOLNOX SOURCE PROTECTION SYSTEM v2.0
+         ============================================= -->
+    <script>
+    (function() {
+        'use strict';
+
+        // ---- 1. RIGHT CLICK DISABLE ----
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // ---- 2. KEYBOARD SHORTCUTS BLOCK ----
+        document.addEventListener('keydown', function(e) {
+            // Block F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault(); return false;
+            }
+            // Block Ctrl+U (View Source)
+            if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                e.preventDefault(); return false;
+            }
+            // Block Ctrl+Shift+I (DevTools)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+                e.preventDefault(); return false;
+            }
+            // Block Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
+                e.preventDefault(); return false;
+            }
+            // Block Ctrl+Shift+C (Inspector)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+                e.preventDefault(); return false;
+            }
+            // Block Ctrl+S (Save page)
+            if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault(); return false;
+            }
+            // Block Ctrl+A (Select All)
+            if (e.ctrlKey && (e.key === 'a' || e.key === 'A')) {
+                e.preventDefault(); return false;
+            }
+        });
+
+        // ---- 3. DEVTOOLS DETECTION (Size-based) ----
+        var devtoolsOpen = false;
+        var threshold = 160;
+
+        function checkDevTools() {
+            var widthDiff = window.outerWidth - window.innerWidth;
+            var heightDiff = window.outerHeight - window.innerHeight;
+            if (widthDiff > threshold || heightDiff > threshold) {
+                if (!devtoolsOpen) {
+                    devtoolsOpen = true;
+                    // Blur/scramble the page content
+                    document.body.style.filter = 'blur(10px)';
+                    document.body.style.pointerEvents = 'none';
+                    // Show warning overlay
+                    showWarningOverlay();
+                }
+            } else {
+                if (devtoolsOpen) {
+                    devtoolsOpen = false;
+                    document.body.style.filter = '';
+                    document.body.style.pointerEvents = '';
+                    hideWarningOverlay();
+                }
+            }
+        }
+
+        setInterval(checkDevTools, 1000);
+
+        // ---- 4. DEVTOOLS WARNING OVERLAY ----
+        function showWarningOverlay() {
+            if (document.getElementById('__txProtectOverlay')) return;
+            var overlay = document.createElement('div');
+            overlay.id = '__txProtectOverlay';
+            overlay.style.cssText = [
+                'position:fixed', 'top:0', 'left:0', 'width:100vw', 'height:100vh',
+                'background:rgba(0,0,0,0.97)', 'z-index:2147483647',
+                'display:flex', 'flex-direction:column',
+                'align-items:center', 'justify-content:center',
+                'font-family:sans-serif', 'color:#fff'
+            ].join(';');
+            overlay.innerHTML = [
+                '<div style="font-size:64px;margin-bottom:16px;">🔒</div>',
+                '<h1 style="font-size:28px;font-weight:800;margin:0 0 12px;color:#E50914;">Access Restricted</h1>',
+                '<p style="font-size:16px;color:#aaa;text-align:center;max-width:400px;">',
+                'Developer tools detected.<br>Please close DevTools to continue using TOOLNOX.',
+                '</p>'
+            ].join('');
+            document.body.appendChild(overlay);
+        }
+
+        function hideWarningOverlay() {
+            var el = document.getElementById('__txProtectOverlay');
+            if (el) el.remove();
+        }
+
+        // ---- 5. DISABLE TEXT SELECTION ----
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault(); return false;
+        });
+
+        // ---- 6. DISABLE DRAG ----
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault(); return false;
+        });
+
+        // ---- 7. CONSOLE WARNING MESSAGE ----
+        // Overwrite console to show warning
+        var _warn = console.warn;
+        setTimeout(function() {
+            console.clear();
+            console.log('%c⛔ STOP!', 'color:#E50914;font-size:48px;font-weight:900;');
+            console.log('%cThis is TOOLNOX protected content.', 'color:#fff;font-size:18px;font-weight:600;');
+            console.log('%cUnauthorized copying or reverse engineering is prohibited.', 'color:#aaa;font-size:14px;');
+        }, 500);
+
+    })();
+    </script>
+    <!-- =============================================
+         END PROTECTION SYSTEM
+         ============================================= -->
+
     <script>
         tailwind.config = {
             darkMode: 'class',
